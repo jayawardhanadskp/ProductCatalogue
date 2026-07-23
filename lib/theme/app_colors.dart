@@ -21,7 +21,7 @@ class AppColors {
   // Light
   static const lightBackground = Color(0xFFF8F9FB);
   static const lightSurface = Colors.white;
-  static const lightCard = Colors.white;
+  static const lightCard = Color.fromARGB(255, 240, 244, 250);
 
   static const lightTextPrimary = Color(0xFF1B1E28);
   static const lightTextSecondary = Color(0xFF6B7280);

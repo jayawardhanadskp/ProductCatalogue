@@ -1,10 +1,13 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:product_catalogue/theme/app_colors.dart';
+import 'package:product_catalogue/theme/theme_extensions.dart';
 import 'package:product_catalogue/views/cart_screen.dart';
 import 'package:product_catalogue/views/favourite_screen.dart';
-import 'package:product_catalogue/views/home_screen.dart';
+import 'package:product_catalogue/views/home/home_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -38,7 +41,7 @@ class _AppShellState extends State<AppShell> {
               height: 75,
               margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
@@ -95,7 +98,7 @@ class _AppShellState extends State<AppShell> {
                   width: 70,
                   height: 70,
                   decoration: BoxDecoration(
-                    color: AppColors.darkBackground,
+                    color: context.theme.colorScheme.tertiary,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -109,7 +112,7 @@ class _AppShellState extends State<AppShell> {
                     CupertinoIcons.heart,
                     color: _selectedIndex == 1
                         ? AppColors.secondary
-                        : AppColors.white,
+                        : context.theme.colorScheme.onTertiary,
                     size: 28,
                   ),
                 ),
