@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:product_catalogue/app/app.dart';
+import 'package:product_catalogue/app/app_shell.dart';
 import 'package:product_catalogue/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Proudct Catalogue',
           theme: themeProvider.theme,
-          home: App()
+          home: AppShell()
         );
       }
     );

@@ -7,7 +7,7 @@ class AppColors {
   static const primaryLight = Color(0xFF7A84F6);
   static const primaryDark = Color(0xFF3944C9);
 
-  static const secondary = Color(0xFFFFB703);
+  static const secondary = Color.fromARGB(255, 255, 121, 3);
 
   static const success = Color(0xFF22C55E);
   static const warning = Color(0xFFF59E0B);
@@ -28,7 +28,7 @@ class AppColors {
 
   static const lightBorder = Color(0xFFE5E7EB);
 
-  static const lightIcon = Color(0xff6B7280);
+  static const lightIcon = Color.fromRGBO(189, 189, 189, 1);
   static const lightshadow = Color(0x14000000);
 
   // Dark

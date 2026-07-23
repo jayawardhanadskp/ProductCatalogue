@@ -1,0 +1,123 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:product_catalogue/theme/app_colors.dart';
+import 'package:product_catalogue/views/cart_screen.dart';
+import 'package:product_catalogue/views/favourite_screen.dart';
+import 'package:product_catalogue/views/home_screen.dart';
+
+class AppShell extends StatefulWidget {
+  const AppShell({super.key});
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const FavouriteScreen(),
+    const CartScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: Container(
+        height: 110,
+        color: Colors.transparent,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // main layer
+            Container(
+              height: 75,
+              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 20,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () => setState(() => _selectedIndex = 0),
+                    child: Container(
+                      width: 50,
+                      padding: EdgeInsets.all(10),
+                      child: SvgPicture.asset(
+                        'assets/svg/home.svg',
+                        color: _selectedIndex == 0
+                            ? AppColors.secondary
+                            : AppColors.lightIcon,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 60),
+
+                  InkWell(
+                    onTap: () => setState(() => _selectedIndex = 2),
+                    child: Container(
+                      width: 50,
+                      padding: EdgeInsets.all(10),
+                      child: SvgPicture.asset(
+                        'assets/svg/bag.svg',
+                        color: _selectedIndex == 2
+                            ? AppColors.secondary
+                            : AppColors.lightIcon,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // fav
+            Positioned(
+              top: 0,
+              child: InkWell(
+                onTap: () {
+                  setState(() => _selectedIndex = 1);
+                },
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: AppColors.darkBackground,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.darkBackground.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    CupertinoIcons.heart,
+                    color: _selectedIndex == 1
+                        ? AppColors.secondary
+                        : AppColors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
