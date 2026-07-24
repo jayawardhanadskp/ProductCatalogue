@@ -15,6 +15,8 @@ class AppColors {
 
   static const favorite = Color(0xFFFF4D6D);
 
+  static const rating = Colors.amber;
+
   static const white = Colors.white;
   static const black = Colors.black;
 

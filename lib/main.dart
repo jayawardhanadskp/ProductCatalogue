@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:product_catalogue/app/app_shell.dart';
+import 'package:product_catalogue/app/routes.dart';
 import 'package:product_catalogue/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +20,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'Proudct Catalogue',
           theme: themeProvider.theme,
-          home: AppShell()
+          // home: AppShell()
+          routerConfig: router,
         );
       }
     );

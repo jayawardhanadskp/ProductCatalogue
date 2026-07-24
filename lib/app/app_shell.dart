@@ -3,33 +3,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:product_catalogue/theme/app_colors.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
-import 'package:product_catalogue/views/cart_screen.dart';
+import 'package:product_catalogue/views/cart/cart_screen.dart';
 import 'package:product_catalogue/views/favourite_screen.dart';
 import 'package:product_catalogue/views/home/home_screen.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  final StatefulNavigationShell navigationShell;
+  const AppShell({
+    required this.navigationShell,
+    super.key});
 
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const FavouriteScreen(),
-    const CartScreen(),
-  ];
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: _screens[_selectedIndex],
+            body: widget.navigationShell,
+
       bottomNavigationBar: Container(
         height: 110,
         color: Colors.transparent,
@@ -55,13 +54,13 @@ class _AppShellState extends State<AppShell> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    onTap: () => setState(() => _selectedIndex = 0),
+                    onTap: () => widget.navigationShell.goBranch(0, initialLocation: true),
                     child: Container(
                       width: 50,
                       padding: EdgeInsets.all(10),
                       child: SvgPicture.asset(
                         'assets/svg/home.svg',
-                        color: _selectedIndex == 0
+                        color: widget.navigationShell.currentIndex == 0
                             ? AppColors.secondary
                             : AppColors.lightIcon,
                       ),
@@ -71,13 +70,13 @@ class _AppShellState extends State<AppShell> {
                   const SizedBox(width: 60),
 
                   InkWell(
-                    onTap: () => setState(() => _selectedIndex = 2),
+                    onTap: () => widget.navigationShell.goBranch(2, initialLocation: true),
                     child: Container(
                       width: 50,
                       padding: EdgeInsets.all(10),
                       child: SvgPicture.asset(
                         'assets/svg/bag.svg',
-                        color: _selectedIndex == 2
+                        color: widget.navigationShell.currentIndex == 2
                             ? AppColors.secondary
                             : AppColors.lightIcon,
                       ),
@@ -92,7 +91,7 @@ class _AppShellState extends State<AppShell> {
               top: 0,
               child: InkWell(
                 onTap: () {
-                  setState(() => _selectedIndex = 1);
+                  widget.navigationShell.goBranch(1, initialLocation: true);
                 },
                 child: Container(
                   width: 70,
@@ -110,7 +109,7 @@ class _AppShellState extends State<AppShell> {
                   ),
                   child: Icon(
                     CupertinoIcons.heart,
-                    color: _selectedIndex == 1
+                    color: widget.navigationShell.currentIndex == 1
                         ? AppColors.secondary
                         : context.theme.colorScheme.onTertiary,
                     size: 28,
