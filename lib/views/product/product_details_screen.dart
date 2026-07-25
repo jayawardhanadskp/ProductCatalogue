@@ -40,7 +40,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       height: 380,
                       width: double.infinity,
                       child: AppNetworkImageWidget(
-                        imageUrl: product.image,
+                        imageUrl: product.images?[0] ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -134,7 +134,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             RatingBarIndicator(
-                              rating: widget._productModel.rating.rate,
+                              rating: widget._productModel.rating,
                               direction: Axis.horizontal,
                               itemCount: 5,
                               itemSize: 18.0,
@@ -145,19 +145,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                             const SizedBox(width: 6),
                             Text(
-                              product.rating.rate.toStringAsFixed(1),
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '(${product.rating.count})',
+                              product.rating.toStringAsFixed(1),
                               style: context.textTheme.bodySmall?.copyWith(
                                 color:
                                     context.theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
+                          
+                          
                             const Spacer(),
                             Text(
                               '\$${product.price.toStringAsFixed(2)}',

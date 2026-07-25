@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:product_catalogue/app/app_shell.dart';
 import 'package:product_catalogue/app/routes.dart';
 import 'package:product_catalogue/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => ThemeProvider()),
-    ],
-    child: const MyApp(),
-  ));
+ 
+
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => ThemeProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           // home: AppShell()
           routerConfig: router,
         );
-      }
+      },
     );
   }
 }
