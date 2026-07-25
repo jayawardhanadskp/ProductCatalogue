@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:product_catalogue/providers/product_provider.dart';
 import 'package:product_catalogue/providers/theme_provider.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
+import 'package:product_catalogue/views/home/widgets/category_widget.dart';
 import 'package:product_catalogue/views/home/widgets/product_card.dart';
 import 'package:product_catalogue/views/home/widgets/search_bar_widget.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _productProvider.loadInitialProducts();
+      _productProvider.loadCategoryList();
     });
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
@@ -40,23 +42,24 @@ class _HomeScreenState extends State<HomeScreen> {
         !_productProvider.isPaginatingLoading &&
         !_productProvider.isInitialLoading &&
         _productProvider.hasMore) {
-      _productProvider.loadMore(); 
+      _productProvider.loadMore();
     }
   }
 
   @override
-void dispose() {
-  _scrollController
-    ..removeListener(_onScroll)
-    ..dispose();
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
 
-  super.dispose();
-}
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 10.0),
+        padding: const EdgeInsets.fromLTRB(10.0, 55.0, 10.0, 10.0),
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
@@ -77,31 +80,37 @@ void dispose() {
                     ),
 
                     Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 15,
-                        dragStartBehavior: DragStartBehavior.values.first,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            child: Padding(
-                              padding: index == 0
-                                  ? EdgeInsets.only(
-                                      left:
-                                          MediaQuery.of(context).size.width *
-                                          0.3,
-                                    )
-                                  : EdgeInsets.zero,
-                              child: Text(
-                                'All Items',
-                                style: context.textTheme.displayLarge,
-                              ),
-                            ),
+                      child: Consumer<ProductProvider>(
+                        builder: (context, productProvider, _) {
+                          if (productProvider.categoryError != null) {
+                            return Text(
+                              productProvider.categoryError.toString(),
+                            );
+                          }
+                          return ListView.builder(
+                            itemCount: productProvider.categories.length,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+
+                            dragStartBehavior: DragStartBehavior.values.first,
+                            itemBuilder: (context, index) {
+                              final String categoryName =
+                                  productProvider.categories[index];
+                              final bool isSelected =
+                                  productProvider.selectedCategory ==
+                                  categoryName;
+
+                              return CategoryWidget(
+                                onTap: () {
+                                  productProvider
+                                      .loadProductsByCategory(categoryName);
+                                },
+                                categoryName: categoryName,
+                                isSelected: isSelected,
+                                index: index,
+                              );
+                            },
                           );
                         },
                       ),
@@ -113,7 +122,7 @@ void dispose() {
                 preferredSize: const Size.fromHeight(15),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: const SearchBarWidget(),
+                  child: SearchBarWidget(),
                 ),
               ),
             ),

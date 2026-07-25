@@ -40,7 +40,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       height: 380,
                       width: double.infinity,
                       child: AppNetworkImageWidget(
-                        imageUrl: product.images?[0] ?? '',
+                        imageUrl: product.images[0] ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),

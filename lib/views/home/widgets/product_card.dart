@@ -1,14 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:product_catalogue/models/product_model.dart';
 import 'package:product_catalogue/theme/app_colors.dart';
 import 'package:product_catalogue/theme/app_dimensions.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
-import 'package:product_catalogue/views/product/product_details_screen.dart';
 import 'package:product_catalogue/widgets/app_network_image_widget.dart';
 
 class ProductCard extends StatefulWidget {
@@ -29,16 +26,7 @@ class _ProductCardState extends State<ProductCard> {
       onTap: () {
         GoRouter.of(context).push(
           '/details',
-          extra: widget.productModel ?? ProductModel(
-            id: 1,
-            title: 'Product Title',
-            description: ' hhhhhhhhhhhhhhhijsbdfijerkjfberiuybfurbvfuerbuvhbreuvburevbjhwbdcuhiqwjmxiwomxiwemdijewmdijemwixiejwmxiwmxijewncijcnuhewbcygewvcyweuregvygerygerhereijrnfierufhriuehfierunciureniunrcbfiherbuhfiberihvbirhevbiehrbvibre Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.',
-            category: 'Product Category',
-            price: 999.99,
-            images:
-                ['https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png'],
-            rating: 4.34
-          ),
+          extra: widget.productModel 
         );
       },
       child: Container(
@@ -57,7 +45,7 @@ class _ProductCardState extends State<ProductCard> {
                   width: double.infinity,
                   child: AppNetworkImageWidget(
                     imageUrl:
-                        widget.productModel?.images.first ??
+                        widget.productModel.images.first ??
                         'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png',
                         fit: BoxFit.fill, 
                   ),
@@ -97,13 +85,13 @@ class _ProductCardState extends State<ProductCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.productModel?.title ?? 'Product Title eeeeee',
+                    widget.productModel.title,
                     style: context.textTheme.bodyLarge,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
                   Text(
-                    widget.productModel?.description ?? 'Product Description eeeee',
+                    widget.productModel.description,
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.theme.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w200,
@@ -113,7 +101,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    widget.productModel?.price.toStringAsFixed(2) ?? '\$99.99',
+                    widget.productModel.price.toStringAsFixed(2),
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.theme.colorScheme.secondary,
                       fontWeight: FontWeight.w400,

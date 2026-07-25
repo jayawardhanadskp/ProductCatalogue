@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:product_catalogue/models/product_model.dart';
 import 'package:product_catalogue/services/network/product_service.dart';
@@ -133,7 +132,7 @@ class ProductProvider extends ChangeNotifier {
 
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    if (query.isEmpty) {
+    if (query.isEmpty && _selectedCategory == 'All Items') {
       await loadInitialProducts();
       return;
     }

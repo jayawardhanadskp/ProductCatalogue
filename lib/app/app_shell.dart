@@ -6,9 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:product_catalogue/theme/app_colors.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
-import 'package:product_catalogue/views/cart/cart_screen.dart';
-import 'package:product_catalogue/views/favourite_screen.dart';
-import 'package:product_catalogue/views/home/home_screen.dart';
+
 
 class AppShell extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
