@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:product_catalogue/providers/product_provider.dart';
 import 'package:product_catalogue/providers/theme_provider.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
 import 'package:product_catalogue/views/home/widgets/product_card.dart';
@@ -14,12 +15,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final ProductProvider _productProvider;
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _productProvider = context.read<ProductProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _productProvider.loadInitialProducts();
+    });
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+
+    const threshold = 100.0;
+    final position = _scrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - threshold &&
+        !_productProvider.isPaginatingLoading &&
+        !_productProvider.isInitialLoading &&
+        _productProvider.hasMore) {
+      _productProvider.loadMore(); 
+    }
+  }
+
+  @override
+void dispose() {
+  _scrollController
+    ..removeListener(_onScroll)
+    ..dispose();
+
+  super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 10.0),
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverAppBar(
               pinned: true,
@@ -36,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           context.read<ThemeProvider>().toggleTheme(),
                       icon: Icon(Icons.circle),
                     ),
-                    
+
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -51,7 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               vertical: 5,
                             ),
                             child: Padding(
-                              padding:index == 0 ? EdgeInsets.only( left: MediaQuery.of(context).size.width * 0.3) : EdgeInsets.zero,
+                              padding: index == 0
+                                  ? EdgeInsets.only(
+                                      left:
+                                          MediaQuery.of(context).size.width *
+                                          0.3,
+                                    )
+                                  : EdgeInsets.zero,
                               child: Text(
                                 'All Items',
                                 style: context.textTheme.displayLarge,
@@ -97,21 +142,42 @@ class _HomeScreenState extends State<HomeScreen> {
             //     child: const SearchBarWidget(),
             //   ),
             // ),
-
             SliverPadding(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 80),
-              sliver: SliverGrid.builder(
-                itemCount: 10,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 0.66,
-                ),
-                itemBuilder: (context, index) {
-                  return ProductCard();
+              sliver: Consumer<ProductProvider>(
+                builder: (context, productProvider, _) {
+                  if (productProvider.isInitialLoading) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    );
+                  }
+                  if (productProvider.initialError != null) {
+                    return SliverFillRemaining(
+                      child: Center(child: Text(productProvider.initialError!)),
+                    );
+                  }
+                  if (productProvider.products.isEmpty) {
+                    return const SliverFillRemaining(
+                      child: Center(child: Text("No products")),
+                    );
+                  }
+                  return SliverGrid.builder(
+                    itemCount: productProvider.products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 0.66,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ProductCard(
+                        productModel: productProvider.products[index],
+                      );
+                    },
+                  );
                 },
-                
               ),
             ),
           ],

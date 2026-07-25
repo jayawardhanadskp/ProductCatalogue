@@ -40,17 +40,25 @@ class ProductService {
   }
 
   // search products
-  Future<ProductResponseModel> searchProducts(String name, {int limit = 30, int skip = 0}) async {
+  Future<ProductResponseModel> searchProducts(
+    String name, {
+    int limit = 30,
+    int skip = 0,
+  }) async {
     try {
       final response = await _client.dio.get(
         '/products/search',
         queryParameters: {'q': name, 'limit': limit, 'skip': skip},
       );
-      final data = ProductResponseModel.fromMap(response.data as Map<String, dynamic>);
-      
+      final data = ProductResponseModel.fromMap(
+        response.data as Map<String, dynamic>,
+      );
+
       return data;
     } on DioException catch (e) {
       throw _client.handleError(e);
     }
   }
+
+  
 }

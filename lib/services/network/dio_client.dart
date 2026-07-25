@@ -12,7 +12,7 @@ class DioClient {
         receiveTimeout: const Duration(seconds: 10),
         responseType: ResponseType.json, 
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json',},
-        
+        queryParameters: {'select': select}
       ),
     );
 
@@ -48,8 +48,10 @@ class DioClient {
   }
 }
 
+// product data sorting helper
+  String select = 'id,title,price,description,category,images,rating,';
+  
 // exception helper
-
 class ApiException implements Exception {
   final String message;
   final int? statusCode;
