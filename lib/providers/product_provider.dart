@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:product_catalogue/models/product_model.dart';
@@ -8,22 +10,31 @@ class ProductProvider extends ChangeNotifier {
     : _productService = productService ?? ProductService();
   final ProductService _productService;
 
-  // state properties
+  // debounce timer
+  Timer? _debounce;
+
+  // product state properties
   final List<ProductModel> _products = [];
   bool _hasMore = true;
   int _skip = 0;
   final int _limit = 30;
   String _currentQuery = '';
 
+  // category state properties
+  List<String> _categories = [];
+  String _selectedCategory = 'All Items';
+
   // loadings
   bool _isInitialLoading = false;
   bool _isSearchLoading = false;
   bool _isPaginatingLoading = false;
+  bool _isCategoryLoading = false;
 
   // errors
   String? _initialError;
   String? _searchError;
   String? _paginationError;
+  String? _categoryError;
 
   // getters
   List<ProductModel> get products => _products;
@@ -32,10 +43,15 @@ class ProductProvider extends ChangeNotifier {
   bool get isInitialLoading => _isInitialLoading;
   bool get isSearchLoading => _isSearchLoading;
   bool get isPaginatingLoading => _isPaginatingLoading;
+  bool get isCategoryLoading => _isCategoryLoading;
 
   String? get initialError => _initialError;
   String? get searchError => _searchError;
   String? get paginationError => _paginationError;
+  String? get categoryError => _categoryError;
+
+  List<String> get categories => _categories;
+  String get selectedCategory => _selectedCategory;
 
   // get initial products
   Future<void> loadInitialProducts() async {
@@ -45,6 +61,7 @@ class ProductProvider extends ChangeNotifier {
     _skip = 0;
     _hasMore = true;
     _currentQuery = '';
+    _selectedCategory = 'All Items';
     notifyListeners();
 
     try {
@@ -84,6 +101,12 @@ class ProductProvider extends ChangeNotifier {
           limit: _limit,
           skip: _skip,
         );
+      } else if (_selectedCategory != 'All Items') {
+        response = await _productService.getProductsByCategory(
+          _selectedCategory,
+          limit: _limit,
+          skip: _skip,
+        );
       } else {
         response = await _productService.searchProducts(
           _currentQuery,
@@ -106,22 +129,75 @@ class ProductProvider extends ChangeNotifier {
   // search products
   Future<void> searchProducts(String query) async {
     _currentQuery = query;
-    _products.clear();
-    _skip = 0;
-    _hasMore = true;
     _searchError = null;
+
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     if (query.isEmpty) {
       await loadInitialProducts();
       return;
     }
 
-    _isSearchLoading = true;
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      _products.clear();
+      _skip = 0;
+      _hasMore = true;
+      _isSearchLoading = true;
+      notifyListeners();
+      try {
+        final response = await _productService.searchProducts(
+          _currentQuery,
+          limit: _limit,
+          skip: _skip,
+        );
+
+        _products.addAll(response.products);
+        _updatePaginationControl(response);
+      } catch (e) {
+        print(e);
+        _searchError = e.toString();
+      } finally {
+        _isSearchLoading = false;
+        notifyListeners();
+      }
+    });
+  }
+
+  Future<void> loadCategoryList() async {
+    _isCategoryLoading = true;
+    _categoryError = null;
     notifyListeners();
 
     try {
-      final response = await _productService.searchProducts(
-        _currentQuery,
+      final response = await _productService.getCategories();
+      _categories = ['All Items', ...response];
+    } catch (e) {
+      print(e);
+      _categoryError = e.toString();
+    } finally {
+      _isCategoryLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadProductsByCategory(String category) async {
+    _selectedCategory = category;
+    _products.clear();
+    _skip = 0;
+    _hasMore = true;
+    _categoryError = null;
+
+    if (category == 'All Items') {
+      await loadInitialProducts();
+      return;
+    }
+
+    _isCategoryLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _productService.getProductsByCategory(
+        category,
         limit: _limit,
         skip: _skip,
       );
@@ -130,9 +206,9 @@ class ProductProvider extends ChangeNotifier {
       _updatePaginationControl(response);
     } catch (e) {
       print(e);
-      _searchError = e.toString();
+      _categoryError = e.toString();
     } finally {
-      _isSearchLoading = false;
+      _isCategoryLoading = false;
       notifyListeners();
     }
   }
@@ -144,5 +220,12 @@ class ProductProvider extends ChangeNotifier {
     } else {
       _skip = response.skip + response.limit;
     }
+  }
+
+  // dispose debounce timer
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 }

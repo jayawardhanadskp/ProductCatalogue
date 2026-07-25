@@ -60,5 +60,33 @@ class ProductService {
     }
   }
 
-  
+  // get products category list
+  Future<List<String>> getCategories() async {
+    try {
+      final response = await _client.dio.get('/products/category-list');
+      final data = List<String>.from(response.data as List<dynamic>);
+      return data;
+    } on DioException catch (e) {
+      throw _client.handleError(e);
+    }
+  }
+
+  Future<ProductResponseModel> getProductsByCategory(
+    String category, {
+    int limit = 30,
+    int skip = 0,
+  }) async {
+    try {
+      final response = await _client.dio.get(
+        '/products/category/$category',
+        queryParameters: {'limit': limit, 'skip': skip},
+      );
+      final data = ProductResponseModel.fromMap(
+        response.data as Map<String, dynamic>,
+      );
+      return data;
+    } on DioException catch (e) {
+      throw _client.handleError(e);
+    }
+  }
 }
