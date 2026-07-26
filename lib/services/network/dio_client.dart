@@ -10,9 +10,14 @@ class DioClient {
         baseUrl: AppConfig.BASE_URL,
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
-        responseType: ResponseType.json, 
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json',},
-        queryParameters: {'select': select}
+        responseType: ResponseType.json,
+        validateStatus: (status) =>
+            status != null && status >= 200 && status < 300,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        queryParameters: {'select': select},
       ),
     );
 
@@ -34,9 +39,19 @@ class DioClient {
       case DioExceptionType.receiveTimeout:
         return ApiException('Connection timed out. Please try again.');
       case DioExceptionType.badResponse:
+        final statusCode = e.response?.statusCode;
+        if (statusCode == 404) {
+          return ApiException('Not found.', statusCode: statusCode);
+        }
+        if (statusCode != null && statusCode >= 500) {
+          return ApiException(
+            'Server error. Please try again later.',
+            statusCode: statusCode,
+          );
+        }
         return ApiException(
-          'Server error (${e.response?.statusCode}).',
-          statusCode: e.response?.statusCode,
+          'Request failed (${statusCode ?? 'unknown'}).',
+          statusCode: statusCode,
         );
       case DioExceptionType.connectionError:
         return ApiException('No internet connection.');
@@ -49,8 +64,8 @@ class DioClient {
 }
 
 // product data sorting helper
-  String select = 'id,title,price,description,category,images,rating,';
-  
+String select = 'id,title,price,description,category,images,rating,';
+
 // exception helper
 class ApiException implements Exception {
   final String message;

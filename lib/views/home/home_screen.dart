@@ -18,6 +18,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final ProductProvider _productProvider;
   late final ScrollController _scrollController;
+  late final ScrollController _categoryScrollController;
+
+  String _previousCategory = 'All Items';
 
   @override
   void initState() {
@@ -29,13 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
       _productProvider.loadCategoryList();
     });
     _scrollController = ScrollController();
+    _categoryScrollController = ScrollController();
+    
     _scrollController.addListener(_onScroll);
+    _productProvider.addListener(_syncCategoryScroll);
   }
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
 
-    const threshold = 100.0;
+    const threshold = 300.0;
     final position = _scrollController.position;
 
     if (position.pixels >= position.maxScrollExtent - threshold &&
@@ -46,11 +52,27 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  
+
+void _syncCategoryScroll() {
+  final current = _productProvider.selectedCategory;
+  if (current == 'All Items' &&
+      current != _previousCategory &&
+      _categoryScrollController.hasClients) {
+    _categoryScrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOut,
+    );
+  }
+  _previousCategory = current;
+}
+
   @override
   void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
+    _productProvider.removeListener(_syncCategoryScroll);
+    _scrollController..removeListener(_onScroll)..dispose();
+    _categoryScrollController.dispose();
 
     super.dispose();
   }
@@ -88,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                           return ListView.builder(
+                             controller: _categoryScrollController,
                             itemCount: productProvider.categories.length,
                             shrinkWrap: true,
                             padding: EdgeInsets.zero,
@@ -103,8 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               return CategoryWidget(
                                 onTap: () {
-                                  productProvider
-                                      .loadProductsByCategory(categoryName);
+                                  productProvider.loadProductsByCategory(
+                                    categoryName,
+                                  );
                                 },
                                 categoryName: categoryName,
                                 isSelected: isSelected,

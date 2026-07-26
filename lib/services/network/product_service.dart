@@ -70,7 +70,7 @@ class ProductService {
       throw _client.handleError(e);
     }
   }
-
+// get products under category
   Future<ProductResponseModel> getProductsByCategory(
     String category, {
     int limit = 30,

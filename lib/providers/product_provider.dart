@@ -52,6 +52,8 @@ class ProductProvider extends ChangeNotifier {
   List<String> get categories => _categories;
   String get selectedCategory => _selectedCategory;
 
+  String get currentQuery => _currentQuery;
+
   // get initial products
   Future<void> loadInitialProducts() async {
     _isInitialLoading = true;
@@ -128,6 +130,7 @@ class ProductProvider extends ChangeNotifier {
   // search products
   Future<void> searchProducts(String query) async {
     _currentQuery = query;
+    _selectedCategory = 'All Items';
     _searchError = null;
 
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -181,6 +184,7 @@ class ProductProvider extends ChangeNotifier {
 
   Future<void> loadProductsByCategory(String category) async {
     _selectedCategory = category;
+    _currentQuery = '';
     _products.clear();
     _skip = 0;
     _hasMore = true;
@@ -211,6 +215,8 @@ class ProductProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  
 
   // pagination HELPER =========================================================
   void _updatePaginationControl(ProductResponseModel response) {
