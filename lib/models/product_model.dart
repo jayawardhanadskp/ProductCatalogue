@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'package:hive/hive.dart';
 
+part 'product_model.g.dart'; 
 
 class ProductResponseModel {
   final List<ProductModel> products;
@@ -31,14 +33,27 @@ class ProductResponseModel {
   }
 }
 
-
-class ProductModel {
+@HiveType(typeId: 1)
+class ProductModel extends HiveObject { 
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String title;
+
+  @HiveField(2)
   final double price;
+
+  @HiveField(3)
   final String description;
+
+  @HiveField(4)
   final String category;
+
+  @HiveField(5)
   final List<dynamic> images;
+
+  @HiveField(6)
   final double rating;
 
   ProductModel({
@@ -65,13 +80,13 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      id: map['id'] as int,
-      title: map['title'] as String,
-      price: map['price'] as double,
-      description: map['description'] as String,
-      category: map['category'] as String,
-      images: List<dynamic>.from((map['images'] as List<dynamic>)),
-      rating: map['rating'] as double,
+      id: map['id'] as int? ?? 0,
+      title: map['title'] as String? ?? '',
+      price: (map['price'] as num? ?? 0.0).toDouble(),
+      description: map['description'] as String? ?? '',
+      category: map['category'] as String? ?? '',
+      images: List<dynamic>.from(map['images'] as List<dynamic>? ?? []),
+      rating: (map['rating'] as num? ?? 0.0).toDouble(),
     );
   }
 
