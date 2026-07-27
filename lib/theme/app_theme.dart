@@ -3,7 +3,6 @@ import 'package:product_catalogue/theme/app_colors.dart';
 import 'package:product_catalogue/theme/app_text_styles.dart';
 
 class AppTheme {
-  
   static ThemeData light = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
@@ -13,9 +12,13 @@ class AppTheme {
       secondary: AppColors.secondary,
       surface: AppColors.lightSurface,
       error: AppColors.error,
+      primaryContainer: AppColors.lightCard,
+      onSurfaceVariant: AppColors.lightTextSecondary,
+      tertiary: AppColors.black,
+      onTertiary: AppColors.white
     ),
 
-    scaffoldBackgroundColor: AppColors.lightBackground,
+    scaffoldBackgroundColor: AppColors.lightSurface,
 
     cardTheme: const CardThemeData(color: AppColors.lightCard, elevation: 2),
 
@@ -25,17 +28,16 @@ class AppTheme {
 
     textTheme: AppTextStyles.textTheme.apply(
       bodyColor: AppColors.lightTextPrimary,
-      displayColor: AppColors.lightTextPrimary
+      displayColor: AppColors.lightTextPrimary,
     ),
 
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.lightBackground,
-      foregroundColor: AppColors.lightTextPrimary,
+      backgroundColor: AppColors.lightSurface,
+      foregroundColor: AppColors.lightSurface,
       elevation: 0,
       centerTitle: false,
     ),
   );
-
 
   static ThemeData dark = ThemeData(
     useMaterial3: true,
@@ -46,9 +48,13 @@ class AppTheme {
       secondary: AppColors.secondary,
       surface: AppColors.darkSurface,
       error: AppColors.error,
+      primaryContainer: AppColors.darkCard,
+      onSurfaceVariant: AppColors.darkTextSecondary,
+      tertiary: AppColors.white,
+      onTertiary: AppColors.black,
     ),
 
-    scaffoldBackgroundColor: AppColors.darkBackground,
+    scaffoldBackgroundColor: AppColors.darkSurface,
 
     cardTheme: const CardThemeData(color: AppColors.darkCard, elevation: 2),
 
@@ -58,12 +64,12 @@ class AppTheme {
 
     textTheme: AppTextStyles.textTheme.apply(
       bodyColor: AppColors.darkTextPrimary,
-      displayColor: AppColors.darkTextPrimary
+      displayColor: AppColors.darkTextPrimary,
     ),
 
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
-      foregroundColor: AppColors.darkTextPrimary,
+      backgroundColor: AppColors.darkSurface,
+      foregroundColor: AppColors.darkSurface,
       elevation: 0,
       centerTitle: false,
     ),

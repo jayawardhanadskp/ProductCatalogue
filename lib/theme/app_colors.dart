@@ -7,7 +7,7 @@ class AppColors {
   static const primaryLight = Color(0xFF7A84F6);
   static const primaryDark = Color(0xFF3944C9);
 
-  static const secondary = Color(0xFFFFB703);
+  static const secondary = Color.fromARGB(255, 255, 121, 3);
 
   static const success = Color(0xFF22C55E);
   static const warning = Color(0xFFF59E0B);
@@ -15,20 +15,22 @@ class AppColors {
 
   static const favorite = Color(0xFFFF4D6D);
 
+  static const rating = Colors.amber;
+
   static const white = Colors.white;
   static const black = Colors.black;
 
   // Light
   static const lightBackground = Color(0xFFF8F9FB);
   static const lightSurface = Colors.white;
-  static const lightCard = Colors.white;
+  static const lightCard = Color.fromARGB(255, 240, 244, 250);
 
   static const lightTextPrimary = Color(0xFF1B1E28);
   static const lightTextSecondary = Color(0xFF6B7280);
 
   static const lightBorder = Color(0xFFE5E7EB);
 
-  static const lightIcon = Color(0xff6B7280);
+  static const lightIcon = Color.fromRGBO(189, 189, 189, 1);
   static const lightshadow = Color(0x14000000);
 
   // Dark

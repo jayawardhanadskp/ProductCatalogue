@@ -9,7 +9,7 @@ class AppTextStyles {
   static const TextTheme textTheme = TextTheme(
     displayLarge: TextStyle(
       fontFamily: fontFamily,
-      fontSize: 36,
+      fontSize: 34,
       fontWeight: FontWeight.w700,
     ),
 
