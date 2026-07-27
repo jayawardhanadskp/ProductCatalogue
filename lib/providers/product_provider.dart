@@ -28,6 +28,7 @@ class ProductProvider extends ChangeNotifier {
   bool _isSearchLoading = false;
   bool _isPaginatingLoading = false;
   bool _isCategoryLoading = false;
+  bool _isCategoryProductsLoading = false;
 
   // errors
   String? _initialError;
@@ -43,6 +44,7 @@ class ProductProvider extends ChangeNotifier {
   bool get isSearchLoading => _isSearchLoading;
   bool get isPaginatingLoading => _isPaginatingLoading;
   bool get isCategoryLoading => _isCategoryLoading;
+  bool get isCategoryProductsLoading => _isCategoryProductsLoading;
 
   String? get initialError => _initialError;
   String? get searchError => _searchError;
@@ -195,7 +197,7 @@ class ProductProvider extends ChangeNotifier {
       return;
     }
 
-    _isCategoryLoading = true;
+    _isCategoryProductsLoading = true;
     notifyListeners();
 
     try {
@@ -211,7 +213,7 @@ class ProductProvider extends ChangeNotifier {
       print(e);
       _categoryError = e.toString();
     } finally {
-      _isCategoryLoading = false;
+      _isCategoryProductsLoading = false;
       notifyListeners();
     }
   }

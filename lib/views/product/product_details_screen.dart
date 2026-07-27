@@ -1,12 +1,15 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:product_catalogue/models/product_model.dart';
+import 'package:product_catalogue/providers/favourite_provider.dart';
 import 'package:product_catalogue/theme/app_colors.dart';
 import 'package:product_catalogue/theme/app_dimensions.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
 import 'package:product_catalogue/widgets/app_network_image_widget.dart';
+import 'package:product_catalogue/widgets/app_snack_bars.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final ProductModel _productModel;
@@ -19,8 +22,6 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int quantity = 1;
-
-  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,28 +56,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             icon: CupertinoIcons.back,
                             onTap: () => Navigator.pop(context),
                           ),
-                          _CircleIconButton(
-                            icon: isFavorite
-                                ? CupertinoIcons.heart_fill
-                                : CupertinoIcons.heart,
-                            iconColor: isFavorite
-                                ? AppColors.favorite
-                                : context.theme.colorScheme.onSurface,
-                            onTap: () {
-                              setState(() => isFavorite = !isFavorite);
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    duration: const Duration(seconds: 1),
-                                    behavior: SnackBarBehavior.floating,
-                                    content: Text(
-                                      isFavorite
-                                          ? 'Added to favourites'
-                                          : 'Removed from favourites',
-                                    ),
-                                  ),
-                                );
+                          Selector<FavouriteProvider, bool>(
+                            selector: (context, favProvider) => favProvider
+                                .isFavourite(widget._productModel.id),
+                            builder: (context, isFavorite, _) {
+                              return _CircleIconButton(
+                                icon: isFavorite
+                                    ? CupertinoIcons.heart_fill
+                                    : CupertinoIcons.heart,
+                                iconColor: isFavorite
+                                    ? AppColors.favorite
+                                    : context.theme.colorScheme.onSurface,
+                                onTap: () async {
+                                  final String message = isFavorite
+                                      ? 'Removed from favorites'
+                                      : 'Added to favorites';
+
+                                  final bool isSucess = await
+                                      Provider.of<FavouriteProvider>(
+                                        context, listen: false,
+                                      ).toggleFavorite(product);
+                                  
+                                  if (!mounted) return;
+
+                                  if (isSucess) {
+                                    context.showSuccessSnackbar(message);
+                                  } else {
+                                    context.showErrorSnackbar(
+                                      'Failed to update favorite.',
+                                    );
+                                  }
+                                },
+                              );
                             },
                           ),
                         ],
@@ -129,7 +140,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(height: 8),
 
-                        // rating row + price 
+                        // rating row + price
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -151,8 +162,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     context.theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
-                          
-                          
+
                             const Spacer(),
                             Text(
                               '\$${product.price.toStringAsFixed(2)}',
@@ -169,7 +179,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        Text('About Product', style: context.textTheme.bodyLarge),
+                        Text(
+                          'About Product',
+                          style: context.textTheme.bodyLarge,
+                        ),
                         const SizedBox(height: 6),
                         Text(
                           product.description,
@@ -237,7 +250,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.theme.colorScheme.secondary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppDimensions.buttonRadius),
+                    borderRadius: BorderRadius.circular(
+                      AppDimensions.buttonRadius,
+                    ),
                   ),
                 ),
                 onPressed: () {},
@@ -256,7 +271,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 }
-
 
 class _CircleIconButton extends StatelessWidget {
   final IconData icon;

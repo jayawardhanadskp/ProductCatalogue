@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:product_catalogue/app/app_shell.dart';
 import 'package:product_catalogue/models/product_model.dart';
 import 'package:product_catalogue/views/cart/cart_screen.dart';
-import 'package:product_catalogue/views/favourite_screen.dart';
+import 'package:product_catalogue/views/favorites_screen.dart';
 import 'package:product_catalogue/views/home/home_screen.dart';
 import 'package:product_catalogue/views/product/product_details_screen.dart';
 
@@ -27,7 +27,7 @@ final GoRouter router = GoRouter(
           routes: [
             GoRoute(
               path: '/favourite',
-              builder: (context, state) => const FavouriteScreen(),
+              builder: (context, state) => const FavoritesScreen(),
             ),
           ],
         ),

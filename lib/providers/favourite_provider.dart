@@ -3,8 +3,7 @@ import 'package:product_catalogue/models/product_model.dart';
 import 'package:product_catalogue/services/database/favourite_database_service.dart';
 
 class FavouriteProvider extends ChangeNotifier {
-  FavouriteProvider({FavouriteDatabaseService? favouriteService})
-    : _favouriteService = favouriteService ?? FavouriteDatabaseService();
+  FavouriteProvider(this._favouriteService);
 
   final FavouriteDatabaseService _favouriteService;
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:product_catalogue/theme/app_dimensions.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
 
 class AppNetworkImageWidget extends StatelessWidget {
@@ -26,8 +25,8 @@ class AppNetworkImageWidget extends StatelessWidget {
       fit: fit,
       placeholder: (context, url) => Center(
         child: SizedBox(
-          width: AppDimensions.lg,
-          height: AppDimensions.lg,
+          width: 24,
+          height:24,
           child: CircularProgressIndicator(strokeWidth: 2, color: context.theme.colorScheme.onSurfaceVariant,),
         ),
       ),

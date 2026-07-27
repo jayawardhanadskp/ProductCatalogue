@@ -19,19 +19,14 @@ class CategoryWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Padding(
-          padding: index == 0
-              ? EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.3)
-              : EdgeInsets.zero,
-          child: Text(
-            categoryName.substring(0, 1).toUpperCase() +
-                categoryName.substring(1),
-            style: context.textTheme.displayLarge?.copyWith(
-              color: isSelected
-                  ? context.theme.colorScheme.tertiary
-                  : context.theme.colorScheme.onSurfaceVariant,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
+        child: Text(
+          categoryName.substring(0, 1).toUpperCase() +
+              categoryName.substring(1).replaceAll('-', ' '),
+          style: context.textTheme.titleLarge?.copyWith(
+            color: isSelected
+                ? context.theme.colorScheme.tertiary
+                : context.theme.colorScheme.onSurfaceVariant,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ),

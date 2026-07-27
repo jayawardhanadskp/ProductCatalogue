@@ -2,8 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:product_catalogue/models/product_model.dart';
 
 class FavouriteDatabaseService {
-  FavouriteDatabaseService({Box<ProductModel>? box})
-    : _box = box ?? Hive.box<ProductModel>(boxName);
+  const FavouriteDatabaseService(this._box);
 
   static const boxName = 'favorites';
 
