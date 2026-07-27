@@ -6,7 +6,7 @@ class FavouriteProvider extends ChangeNotifier {
   FavouriteProvider({FavouriteDatabaseService? favouriteService})
     : _favouriteService = favouriteService ?? FavouriteDatabaseService();
 
-  FavouriteDatabaseService _favouriteService;
+  final FavouriteDatabaseService _favouriteService;
 
   final Set<int> _favoriteIds = {};
 
@@ -61,8 +61,6 @@ class FavouriteProvider extends ChangeNotifier {
       print('Failed to update favorite in storage: $error');
 
       return false;
-      
-
     }
   }
 }
