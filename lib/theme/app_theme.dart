@@ -32,8 +32,8 @@ class AppTheme {
     ),
 
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.lightBackground,
-      foregroundColor: AppColors.lightTextPrimary,
+      backgroundColor: AppColors.lightSurface,
+      foregroundColor: AppColors.lightSurface,
       elevation: 0,
       centerTitle: false,
     ),
@@ -65,6 +65,13 @@ class AppTheme {
     textTheme: AppTextStyles.textTheme.apply(
       bodyColor: AppColors.darkTextPrimary,
       displayColor: AppColors.darkTextPrimary,
+    ),
+
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColors.darkSurface,
+      foregroundColor: AppColors.darkSurface,
+      elevation: 0,
+      centerTitle: false,
     ),
   );
 }

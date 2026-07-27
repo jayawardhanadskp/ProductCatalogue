@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:product_catalogue/theme/app_theme.dart';
+import 'package:product_catalogue/services/database/theme_database_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeData _theme = AppTheme.light;
+  final ThemeDatabaseService _dbService;
+  late ThemeMode _themeMode;
 
-  ThemeData get theme => _theme;
+  ThemeProvider(this._dbService) {
+    // Read the stored config through our layer service on startup
+    _themeMode = _dbService.getThemeMode();
+  }
 
-  void toggleTheme() {
-    _theme = _theme == AppTheme.light ? AppTheme.dark : AppTheme.light;
+  ThemeMode get themeMode => _themeMode;
+
+  /// Changes the application's global theme layout and updates the disk storage concurrently.
+  Future<void> setThemeMode(ThemeMode mode) async {
+    if (_themeMode == mode) return; // Prevent useless rebuilds if the mode is identical
+    
+    _themeMode = mode;
     notifyListeners();
+    
+    await _dbService.saveThemeMode(mode);
   }
 }
