@@ -57,7 +57,6 @@ class FavouriteProvider extends ChangeNotifier {
         _favoriteIds.remove(productId);
       }
       notifyListeners();
-      print('Failed to update favorite in storage: $error');
 
       return false;
     }

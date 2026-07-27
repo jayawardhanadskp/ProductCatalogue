@@ -75,7 +75,6 @@ class ProductProvider extends ChangeNotifier {
       _products.addAll(response.products);
       _updatePaginationControl(response);
     } catch (e) {
-      print(e.toString());
       _initialError = e.toString();
     } finally {
       _isInitialLoading = false;
@@ -85,7 +84,6 @@ class ProductProvider extends ChangeNotifier {
 
   // load more products
   Future<void> loadMore() async {
-    print('load more');
     if (_isInitialLoading ||
         _isSearchLoading ||
         _isPaginatingLoading ||
@@ -121,7 +119,6 @@ class ProductProvider extends ChangeNotifier {
       _products.addAll(response.products);
       _updatePaginationControl(response);
     } catch (e) {
-      print(e.toString());
       _paginationError = e.toString();
     } finally {
       _isPaginatingLoading = false;
@@ -158,7 +155,6 @@ class ProductProvider extends ChangeNotifier {
         _products.addAll(response.products);
         _updatePaginationControl(response);
       } catch (e) {
-        print(e);
         _searchError = e.toString();
       } finally {
         _isSearchLoading = false;
@@ -176,7 +172,6 @@ class ProductProvider extends ChangeNotifier {
       final response = await _productService.getCategories();
       _categories = ['All Items', ...response];
     } catch (e) {
-      print(e);
       _categoryError = e.toString();
     } finally {
       _isCategoryLoading = false;
@@ -210,7 +205,6 @@ class ProductProvider extends ChangeNotifier {
       _products.addAll(response.products);
       _updatePaginationControl(response);
     } catch (e) {
-      print(e);
       _categoryError = e.toString();
     } finally {
       _isCategoryProductsLoading = false;

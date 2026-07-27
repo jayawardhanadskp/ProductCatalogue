@@ -1,5 +1,5 @@
 class AppConfig {
-  static const String BASE_URL = String.fromEnvironment(
+  static const String baseUrl = String.fromEnvironment(
     'BASE_URL',
     defaultValue: '',
   );
