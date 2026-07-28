@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -203,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
-                        childAspectRatio: Platform.isAndroid ? 0.7 : 0.66,
+                        childAspectRatio: 0.66,
                       ),
                       itemBuilder: (context, index) {
                         return ProductCard(

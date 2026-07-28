@@ -79,7 +79,7 @@ class CartScreen extends StatelessWidget {
                   Expanded(
                     child: ListView.separated(
                       itemCount: 2,
-                      separatorBuilder: (_, __) => const SizedBox(height: 20),
+                      separatorBuilder: (_, _) => const SizedBox(height: 20),
                       itemBuilder: (context, index) {
                         final color = context.theme.cardTheme.color;
 

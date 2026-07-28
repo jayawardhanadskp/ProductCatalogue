@@ -36,76 +36,70 @@ class _ProductCardState extends State<ProductCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                SizedBox(
-                  height: 180,
-                  width: double.infinity,
-                  child: AppNetworkImageWidget(
-                    imageUrl:
-                        widget.productModel.images.first,
-                    fit: BoxFit.fill,
+            Expanded(   
+              child: Stack(
+                fit: StackFit.expand, 
+                children: [
+                  AppNetworkImageWidget(
+                    imageUrl: widget.productModel.images.first,
+                    fit: BoxFit.cover,
                     memCacheWidth: 400,
                     memCacheHeight: 400,
                   ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Selector<FavouriteProvider, bool>(
-                    selector: (context, favProvider) =>
-                        favProvider.isFavourite(widget.productModel.id),
-                    builder: (context, isFavorite, _) {
-                      return GestureDetector(
-                        
-                        onTap: () async {
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Selector<FavouriteProvider, bool>(
+                      selector: (context, favProvider) =>
+                          favProvider.isFavourite(widget.productModel.id),
+                      builder: (context, isFavorite, _) {
+                        return GestureDetector(
+                          onTap: () async {
+                            final String message = isFavorite
+                                ? 'Removed from favorites'
+                                : 'Added to favorites';
 
-                          final String message = isFavorite 
-                              ? 'Removed from favorites' 
-                              : 'Added to favorites';
+                            final bool isSuccess = await Provider.of<FavouriteProvider>(
+                              context,
+                              listen: false,
+                            ).toggleFavorite(widget.productModel);
 
-                          final bool isSuccess = await Provider.of<FavouriteProvider>(
-                            context,
-                            listen: false,
-                          ).toggleFavorite(widget.productModel);
+                            if (!mounted) return;
 
-                          if (!mounted) return;
-
-                          if (isSuccess) {
-                            context.showSuccessSnackbar(message);
-                          } else {
-                            context.showErrorSnackbar('Failed to update favorite.');
-                          }
-                        },
-                        child: Container(
-                          height: 32,
-                          width: 32,
-                          decoration: BoxDecoration(
-                            color: context.theme.colorScheme.surface
-                                .withOpacity(0.9),
-                            shape: BoxShape.circle,
+                            if (isSuccess) {
+                              context.showSuccessSnackbar(message);
+                            } else {
+                              context.showErrorSnackbar('Failed to update favorite.');
+                            }
+                          },
+                          child: Container(
+                            height: 32,
+                            width: 32,
+                            decoration: BoxDecoration(
+                              color: context.theme.colorScheme.surface.withOpacity(0.9),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                              size: 18,
+                              color: isFavorite
+                                  ? AppColors.favorite
+                                  : context.theme.colorScheme.tertiary,
+                            ),
                           ),
-                          child: Icon(
-                            isFavorite
-                                ? CupertinoIcons.heart_fill
-                                : CupertinoIcons.heart,
-                            size: 18,
-                            color: isFavorite
-                                ? AppColors.favorite
-                                : context.theme.colorScheme.tertiary,
-                          ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     widget.productModel.title,

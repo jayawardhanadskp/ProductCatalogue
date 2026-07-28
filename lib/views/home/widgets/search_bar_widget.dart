@@ -67,10 +67,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   builder: (context, productProvider, child) {
                     if (productProvider.isSearchLoading) {
                       return Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.only(right: 18),
                         child: SizedBox(
-                          width: 12,
-                          height: 12,
+                          width: 14,
+                          height: 14,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             color: context.theme.colorScheme.secondary,

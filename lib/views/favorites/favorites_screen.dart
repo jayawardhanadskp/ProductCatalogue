@@ -23,6 +23,7 @@ class FavoritesScreen extends StatelessWidget {
           slivers: [
             SliverAppBar(
               centerTitle: true,
+              toolbarHeight: 70,
               title: Padding(
                 padding: const EdgeInsets.only(bottom: 5.0),
                 child: Center(
@@ -31,31 +32,34 @@ class FavoritesScreen extends StatelessWidget {
                     children: [
                       const SizedBox(),
                       const SizedBox(),
-                      Text('My Favorites', style: context.textTheme.displayLarge),
-                
-                      Consumer<FavouriteProvider>(
-                        builder: (context, favProvider, _) {
-                          final int count = favProvider.favourites.length;
-                          if (favProvider.favourites.isNotEmpty) {
-                            return Container(
-                               height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              color: context.theme.cardColor,
-                              shape: BoxShape.circle
-                            ),
-                              child: Center(
-                                child: Text(
+                      Text(
+                        'My Favorites',
+                        style: context.textTheme.displayLarge,
+                      ),
+
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: context.theme.cardColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Consumer<FavouriteProvider>(
+                            builder: (context, favProvider, _) {
+                              final int count = favProvider.favourites.length;
+                              if (favProvider.favourites.isNotEmpty) {
+                                return Text(
                                   count.toString(),
                                   style: context.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w500
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ),
-                              ),
-                            );
-                          }
-                          return const SizedBox();
-                        },
+                                );
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
