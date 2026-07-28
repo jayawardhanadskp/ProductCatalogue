@@ -29,7 +29,7 @@ class ThemeToggleButton extends StatelessWidget {
       case ThemeMode.dark:
         return CupertinoIcons.moon;
       case ThemeMode.system:
-        return CupertinoIcons.device_phone_portrait;
+        return CupertinoIcons.gear;
     }
   }
 }

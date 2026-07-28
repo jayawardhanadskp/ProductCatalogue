@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:product_catalogue/providers/product_provider.dart';
+import 'package:product_catalogue/theme/app_dimensions.dart';
 import 'package:product_catalogue/theme/theme_extensions.dart';
 import 'package:product_catalogue/views/home/widgets/category_widget.dart';
 import 'package:product_catalogue/views/home/widgets/product_card.dart';
 import 'package:product_catalogue/views/home/widgets/search_bar_widget.dart';
+import 'package:product_catalogue/widgets/loading_widget.dart';
 import 'package:product_catalogue/widgets/toggle_theme_button.dart';
 import 'package:provider/provider.dart';
 
@@ -105,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: context.theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
-                      const SizedBox(height: 8,)
+                      const SizedBox(height: 8),
                     ],
                   ),
                   ThemeToggleButton(),
@@ -128,9 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Consumer<ProductProvider>(
                           builder: (context, productProvider, _) {
                             if (productProvider.categoryError != null) {
-                              return Text(
-                                productProvider.categoryError.toString(),
-                              );
+                              return SizedBox.shrink();
                             }
                             return ListView.builder(
                               controller: _categoryScrollController,
@@ -173,21 +174,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (productProvider.isInitialLoading ||
                       productProvider.isSearchLoading ||
                       productProvider.isCategoryProductsLoading) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    );
+                    return const ProductGridShimmer();
                   }
-                  if (productProvider.initialError != null) {
-                    return SliverFillRemaining(
-                      child: Center(child: Text(productProvider.initialError!)),
-                    );
+                  if (productProvider.initialError != null ||
+                      productProvider.searchError != null ||
+                      productProvider.categoryProductError != null) {
+                    return _errorStateWidget(context, productProvider);
                   }
                   if (productProvider.products.isEmpty) {
-                    return const SliverFillRemaining(
-                      child: Center(child: Text("No products")),
-                    );
+                    return _emptyStateWidget(context, productProvider);
                   }
                   return SliverGrid.builder(
                     itemCount: productProvider.products.length,
@@ -206,6 +201,104 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _errorStateWidget(
+    BuildContext context,
+    ProductProvider productProvider,
+  ) {
+    return SliverToBoxAdapter(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: .center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+            Icon(
+              CupertinoIcons.exclamationmark_circle,
+              size: 64,
+              color: context.theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 5),
+            Text(
+              productProvider.initialError ??
+                  productProvider.searchError ??
+                  productProvider.categoryProductError ??
+                  'Something went wrong.',
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                productProvider.loadInitialProducts();
+                productProvider.loadCategoryList();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.theme.colorScheme.secondary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppDimensions.buttonRadius,
+                  ),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: .min,
+                children: [
+                  Icon(
+                    Icons.refresh,
+                    color: context.theme.colorScheme.onTertiary,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Retry',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.theme.colorScheme.onTertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _emptyStateWidget(
+    BuildContext context,
+    ProductProvider productProvider,
+  ) {
+    final isSearching = productProvider.currentQuery.isNotEmpty;
+    return SliverToBoxAdapter(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+            Icon(
+              Icons.sentiment_dissatisfied_outlined,
+              size: 64,
+              color: context.theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              isSearching ? 'No results found' : 'No products available',
+              style: context.textTheme.bodyLarge,
+            ),
+            if (isSearching) ...[
+              const SizedBox(height: 4),
+              Text(
+                'Try a different search term',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),

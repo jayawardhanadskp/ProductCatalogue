@@ -35,6 +35,7 @@ class ProductProvider extends ChangeNotifier {
   String? _searchError;
   String? _paginationError;
   String? _categoryError;
+  String? _categoryProductError;
 
   // getters
   List<ProductModel> get products => _products;
@@ -50,6 +51,7 @@ class ProductProvider extends ChangeNotifier {
   String? get searchError => _searchError;
   String? get paginationError => _paginationError;
   String? get categoryError => _categoryError;
+  String? get categoryProductError => _categoryProductError;
 
   List<String> get categories => _categories;
   String get selectedCategory => _selectedCategory;
@@ -205,7 +207,7 @@ class ProductProvider extends ChangeNotifier {
       _products.addAll(response.products);
       _updatePaginationControl(response);
     } catch (e) {
-      _categoryError = e.toString();
+      _categoryProductError = e.toString();
     } finally {
       _isCategoryProductsLoading = false;
       notifyListeners();
