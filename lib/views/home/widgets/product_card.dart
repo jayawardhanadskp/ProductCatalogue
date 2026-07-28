@@ -43,9 +43,10 @@ class _ProductCardState extends State<ProductCard> {
                   width: double.infinity,
                   child: AppNetworkImageWidget(
                     imageUrl:
-                        widget.productModel.images.first ??
-                        'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png',
+                        widget.productModel.images.first,
                     fit: BoxFit.fill,
+                    memCacheWidth: 400,
+                    memCacheHeight: 400,
                   ),
                 ),
                 Positioned(
