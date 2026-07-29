@@ -7,6 +7,8 @@ class AppNetworkImageWidget extends StatelessWidget {
   final double? width;
   final double? height;
   final BoxFit fit;
+  final int? memCacheWidth;
+  final int? memCacheHeight;
 
   const AppNetworkImageWidget({
     super.key,
@@ -14,6 +16,8 @@ class AppNetworkImageWidget extends StatelessWidget {
     this.width,
     this.height,
     this.fit = BoxFit.cover,
+    this.memCacheHeight,
+    this.memCacheWidth,
   });
 
   @override
@@ -23,11 +27,16 @@ class AppNetworkImageWidget extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
+      memCacheHeight: memCacheHeight,
+      memCacheWidth: memCacheWidth,
       placeholder: (context, url) => Center(
         child: SizedBox(
           width: 24,
-          height:24,
-          child: CircularProgressIndicator(strokeWidth: 2, color: context.theme.colorScheme.onSurfaceVariant,),
+          height: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: context.theme.colorScheme.onSurfaceVariant,
+          ),
         ),
       ),
       errorWidget: (context, url, error) => Container(

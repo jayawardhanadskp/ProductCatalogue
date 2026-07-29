@@ -6,15 +6,13 @@ class ThemeProvider extends ChangeNotifier {
   late ThemeMode _themeMode;
 
   ThemeProvider(this._dbService) {
-    // Read the stored config through our layer service on startup
     _themeMode = _dbService.getThemeMode();
   }
 
   ThemeMode get themeMode => _themeMode;
 
-  /// Changes the application's global theme layout and updates the disk storage concurrently.
   Future<void> setThemeMode(ThemeMode mode) async {
-    if (_themeMode == mode) return; // Prevent useless rebuilds if the mode is identical
+    if (_themeMode == mode) return; 
     
     _themeMode = mode;
     notifyListeners();
