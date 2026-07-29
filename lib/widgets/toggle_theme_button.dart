@@ -13,7 +13,10 @@ class ThemeToggleButton extends StatelessWidget {
 
     return PopupMenuButton<ThemeMode>(
       icon: Icon(_iconFor(themeProvider.themeMode, context), color: context.theme.colorScheme.tertiary,),
-      onSelected: (mode) => context.read<ThemeProvider>().setThemeMode(mode),
+      onSelected: (mode) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        context.read<ThemeProvider>().setThemeMode(mode);
+      },
       itemBuilder: (context) => [
         const PopupMenuItem(value: ThemeMode.system, child: Text('System default')),
         const PopupMenuItem(value: ThemeMode.light, child: Text('Light')),

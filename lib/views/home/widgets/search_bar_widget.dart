@@ -103,6 +103,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               onChanged: (value) {
                 context.read<ProductProvider>().searchProducts(value);
               },
+
+              onTapOutside: (_) {
+                FocusScope.of(context).unfocus();
+              },
             ),
           ),
         ],

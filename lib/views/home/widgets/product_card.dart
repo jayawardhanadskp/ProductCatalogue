@@ -118,7 +118,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    widget.productModel.price.toStringAsFixed(2),
+                    '\$${widget.productModel.price.toStringAsFixed(2)}',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.theme.colorScheme.secondary,
                       fontWeight: FontWeight.w400,
