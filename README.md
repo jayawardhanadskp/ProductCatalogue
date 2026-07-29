@@ -136,11 +136,18 @@ flutter test
 ```
 
 
-## Continuous Integration & Deployment (CI/CD)
+## Continuous Integration (CI)
 
-Every pull request targeting the `main` branch automatically triggers code quality checks (`flutter analyze`) and the unit test suite (`flutter test`) via GitHub Actions. 
+Every pull request targeting the `main` branch automatically triggers the CI pipeline using GitHub Actions.
 
-Once these checks pass, the pipeline automatically compiles a production-ready application binary (`flutter build apk --release`) and publishes it directly to the repository's [Releases](https://github.com/jayawardhanadskp/ProductCatalogue/releases) page. This ensures that the latest stable executable is always accessible in a single click without requiring local compilation. The pipeline can also be triggered manually via the GitHub Actions interface.
+The pipeline performs automated code quality checks and validation by running:
+
+- `flutter analyze` - to identify potential code issues and maintain code quality.
+- `flutter test` - to execute the unit test suite and ensure application functionality remains stable.
+
+The workflow also supports manual execution through the GitHub Actions interface using `workflow_dispatch`.
+
+This CI process helps maintain code reliability, detect issues early, and ensure that new changes meet the project's quality standards before being merged into the main branch.
 
 
 ## Future Improvements
